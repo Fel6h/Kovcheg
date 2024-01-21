@@ -6,11 +6,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Rigidbody rb;
-
+    public float shootForce = 100f;
     private void FixedUpdate()
     {
         Move();
         Shoot();
+        
     }
 
     private void Move()
@@ -25,7 +26,13 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            GameObject projectile = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+
+            // Получаем компонент Rigidbody снаряда
+            Rigidbody projectileRigidbody = projectile.GetComponent<Rigidbody>();
+
+            // Применяем силу стрельбы, основанную на ротации объекта
+            projectileRigidbody.AddForce(firePoint.forward * shootForce, ForceMode.Impulse);
         }
     }
 }
