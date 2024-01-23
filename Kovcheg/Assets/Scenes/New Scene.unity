@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -167,7 +167,6 @@ GameObject:
   - component: {fileID: 61573114}
   - component: {fileID: 61573113}
   - component: {fileID: 61573112}
-  - component: {fileID: 61573111}
   - component: {fileID: 61573110}
   m_Layer: 0
   m_Name: Capsule
@@ -188,27 +187,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1ebb4ba451009045b54f91846b73960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0.08
+  moveSpeed: 100
   firePoint: {fileID: 16059038}
   bulletPrefab: {fileID: 6455936324493842563, guid: 5edd251701804a04c8365851e0480eec, type: 3}
   rb: {fileID: 61573112}
   shootForce: 100
---- !u!114 &61573111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 61573109}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36ff05a5230a92b4a8bf54b9ec742221, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _camera: {fileID: 972831412}
-  startCameraPosition: {fileID: 1791656953}
-  scrollDepth: 2
-  smoothScrolling: 5
+  accelerationForce: 120
 --- !u!54 &61573112
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -218,8 +202,8 @@ Rigidbody:
   m_GameObject: {fileID: 61573109}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: 25
+  m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -322,8 +306,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1791656953}
-  - {fileID: 972831412}
   - {fileID: 16059038}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -506,12 +488,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 972831409}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.4695102, y: -0, z: -0, w: 0.88292706}
-  m_LocalPosition: {x: -0.07, y: 7.81, z: -4.66}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 61573116}
+  m_Father: {fileID: 1791656953}
   m_LocalEulerAnglesHint: {x: 56.005, y: 0, z: 0}
 --- !u!1 &1617463157
 GameObject:
@@ -628,8 +610,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1791656953}
+  - component: {fileID: 1791656954}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Camera Parent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -644,12 +627,31 @@ Transform:
   m_GameObject: {fileID: 1791656952}
   serializedVersion: 2
   m_LocalRotation: {x: 0.4695102, y: -0, z: -0, w: 0.88292706}
-  m_LocalPosition: {x: -0.07000005, y: 7.81, z: -4.66}
+  m_LocalPosition: {x: 1.06, y: 8.41, z: -11.582455}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 61573116}
-  m_LocalEulerAnglesHint: {x: 56.005, y: 0, z: 0}
+  m_Children:
+  - {fileID: 972831412}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1791656954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791656952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ff05a5230a92b4a8bf54b9ec742221, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 972831412}
+  cameraParent: {fileID: 1791656953}
+  player: {fileID: 61573116}
+  scrollDepth: 3
+  numberScrollSteps: 4
+  cameraMovementSpeed: 0.07
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -657,3 +659,4 @@ SceneRoots:
   - {fileID: 244779806}
   - {fileID: 1617463161}
   - {fileID: 61573116}
+  - {fileID: 1791656953}

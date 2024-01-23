@@ -7,7 +7,8 @@ public class CameraPositioning : MonoBehaviour
     [SerializeField] private Transform cameraParent;
     [SerializeField] private Transform player;
     [SerializeField] private float scrollDepth = 3;
-    [SerializeField] private float smoothScrolling = 10;
+    [SerializeField] private float numberScrollSteps = 10;
+    [SerializeField] private float cameraMovementSpeed;
     private List<Vector3> cameraPositions = new List<Vector3>();
     private int indexCurrentPostion;
     private Vector3 playerPositionLastFrame;
@@ -27,7 +28,7 @@ public class CameraPositioning : MonoBehaviour
 
     private void Start()
     {
-        indexCurrentPostion = ((int)smoothScrolling);
+        indexCurrentPostion = (int)numberScrollSteps;
         playerPositionLastFrame = player.position;
         FillListPositions();
     }
@@ -40,15 +41,13 @@ public class CameraPositioning : MonoBehaviour
     private void FillListPositions()
     {
         Vector3 endCameraPosition = _camera.localPosition;
-        endCameraPosition.y -= scrollDepth;
         endCameraPosition.z += scrollDepth;
 
-        float scrollStep = scrollDepth / smoothScrolling;
+        float scrollStep = scrollDepth / numberScrollSteps;
 
-        for (int i = 0; i < smoothScrolling + 1; i++)
+        for (int i = 0; i < numberScrollSteps + 1; i++)
         {
             Vector3 newPosition = endCameraPosition;
-            newPosition.y += scrollStep * i;
             newPosition.z -= scrollStep * i;
             cameraPositions.Add(newPosition);
         }
@@ -69,7 +68,7 @@ public class CameraPositioning : MonoBehaviour
 
         if (_camera.localPosition != cameraPositions[IndexCurrentPostion])
         {
-            _camera.localPosition = Vector3.MoveTowards(_camera.localPosition, cameraPositions[IndexCurrentPostion], 0.1f);
+            _camera.localPosition = Vector3.MoveTowards(_camera.localPosition, cameraPositions[IndexCurrentPostion], cameraMovementSpeed);
         }
 
         if (playerPositionLastFrame != player.position)
