@@ -6,12 +6,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Rigidbody rb;
-    public float shootForce = 100f;
+    [SerializeField] private float shootForce = 100f;
+
+    private Vector3 startRotation;
+
+    private void Start()
+    {
+        startRotation = transform.eulerAngles;
+    }
+
     private void FixedUpdate()
     {
         Move();
+        Rotate();
         Shoot();
-        
     }
 
     private void Move()
@@ -22,17 +30,33 @@ public class PlayerController : MonoBehaviour
         rb.MovePosition(transform.position + moveDirection * moveSpeed) ;
     }
 
+    private void Rotate()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            
+            if (Physics.Raycast(ray, out hit, 50))
+            {
+                Vector3 target = hit.point - transform.position;
+                transform.forward = target;
+                transform.rotation = Quaternion.Euler(startRotation.x, transform.position.y, startRotation.z);
+            }
+        }
+    }
+
     private void Shoot()
     {
-        if (Input.GetButtonDown("Fire1"))
-        {
-            GameObject projectile = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        //if (Input.GetButtonDown("Fire1"))
+        //{
+        //    GameObject projectile = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 
-            // Получаем компонент Rigidbody снаряда
-            Rigidbody projectileRigidbody = projectile.GetComponent<Rigidbody>();
+        //    // ГЏГ®Г«ГіГ·Г ГҐГ¬ ГЄГ®Г¬ГЇГ®Г­ГҐГ­ГІ Rigidbody Г±Г­Г Г°ГїГ¤Г 
+        //    Rigidbody projectileRigidbody = projectile.GetComponent<Rigidbody>();
 
-            // Применяем силу стрельбы, основанную на ротации объекта
-            projectileRigidbody.AddForce(firePoint.forward * shootForce, ForceMode.Impulse);
-        }
+        //    // ГЏГ°ГЁГ¬ГҐГ­ГїГҐГ¬ Г±ГЁГ«Гі Г±ГІГ°ГҐГ«ГјГЎГ», Г®Г±Г­Г®ГўГ Г­Г­ГіГѕ Г­Г  Г°Г®ГІГ Г¶ГЁГЁ Г®ГЎГєГҐГЄГІГ 
+        //    projectileRigidbody.AddForce(firePoint.forward * shootForce, ForceMode.Impulse);
+        //}
     }
 }
