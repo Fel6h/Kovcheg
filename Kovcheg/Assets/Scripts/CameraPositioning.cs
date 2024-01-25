@@ -1,14 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraPositioning : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
     [SerializeField] private Transform _camera;
     [SerializeField] private Transform cameraParent;
+    [SerializeField] private Transform axisRotationÑameraParent;
     [SerializeField] private Transform player;
-    [SerializeField] private float scrollDepth = 3;
-    [SerializeField] private float numberScrollSteps = 10;
-    [SerializeField] private float cameraMovementSpeed;
+    [SerializeField] private int minScroll = 3;
+    [SerializeField] private int maxScroll = 3;
+    [SerializeField] private float scrollSpeed;
+    [SerializeField] private float mouseSensitivity;
+    private int numberScrollSteps = 10;
     private List<Vector3> cameraPositions = new List<Vector3>();
     private int indexCurrentPostion;
     private Vector3 playerPositionLastFrame;
@@ -28,7 +31,6 @@ public class CameraPositioning : MonoBehaviour
 
     private void Start()
     {
-        indexCurrentPostion = (int)numberScrollSteps;
         playerPositionLastFrame = player.position;
         FillListPositions();
     }
@@ -36,21 +38,36 @@ public class CameraPositioning : MonoBehaviour
     private void FixedUpdate()
     {
         SetPosition();
+        Rotate();
     }
 
     private void FillListPositions()
     {
         Vector3 endCameraPosition = _camera.localPosition;
-        endCameraPosition.z += scrollDepth;
+        endCameraPosition.z += minScroll;
+        float scrollStep = minScroll / ((float)numberScrollSteps / 2);
 
-        float scrollStep = scrollDepth / numberScrollSteps;
-
-        for (int i = 0; i < numberScrollSteps + 1; i++)
+        for (int i = 0; i < numberScrollSteps / 2; i++)
         {
-            Vector3 newPosition = endCameraPosition;
-            newPosition.z -= scrollStep * i;
-            cameraPositions.Add(newPosition);
+            AddPositions(scrollStep, endCameraPosition, i);
         }
+
+        endCameraPosition = _camera.localPosition;
+        scrollStep = maxScroll / ((float)numberScrollSteps / 2);
+
+        for (int i = 0; i < numberScrollSteps / 2 + 1; i++)
+        {
+            AddPositions(scrollStep, endCameraPosition, i);
+        }
+
+        indexCurrentPostion = cameraPositions.Count / 2;
+    }
+
+    private void AddPositions(float scrollStep, Vector3 endCameraPosition, int index)
+    {
+            Vector3 newPosition = endCameraPosition;
+            newPosition.z -= scrollStep * index;
+            cameraPositions.Add(newPosition);
     }
 
     private void SetPosition()
@@ -68,7 +85,7 @@ public class CameraPositioning : MonoBehaviour
 
         if (_camera.localPosition != cameraPositions[IndexCurrentPostion])
         {
-            _camera.localPosition = Vector3.MoveTowards(_camera.localPosition, cameraPositions[IndexCurrentPostion], cameraMovementSpeed);
+            _camera.localPosition = Vector3.MoveTowards(_camera.localPosition, cameraPositions[IndexCurrentPostion], scrollSpeed);
         }
 
         if (playerPositionLastFrame != player.position)
@@ -76,9 +93,25 @@ public class CameraPositioning : MonoBehaviour
             Vector3 direction = player.position - playerPositionLastFrame;
             direction.y = 0;
 
-            cameraParent.position += direction;
+            axisRotationÑameraParent.position += direction;
         }
 
         playerPositionLastFrame = player.position;
+    }
+
+    private void Rotate()
+    {
+        if (Input.GetMouseButton(2))
+        {
+            float horizontalInput = Input.GetAxis("Mouse X");
+
+            if (horizontalInput != 0)
+            {
+                axisRotationÑameraParent.eulerAngles = 
+                    new Vector3(axisRotationÑameraParent.eulerAngles.x,
+                    axisRotationÑameraParent.eulerAngles.y + horizontalInput * mouseSensitivity,
+                    axisRotationÑameraParent.eulerAngles.z);
+            }
+        }
     }
 }
