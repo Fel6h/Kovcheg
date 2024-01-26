@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -7,7 +8,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private float shootForce = 100f;
-    [SerializeField] private float accelerationForce;
 
     private Vector3 startRotation;
 
@@ -27,9 +27,23 @@ public class PlayerController : MonoBehaviour
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-        Vector3 moveDirection = new Vector3(horizontalInput, 0, verticalInput);
-        rb.AddRelativeForce(moveDirection * (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W)
-            ? moveSpeed + accelerationForce : moveSpeed));
+
+        if (horizontalInput != 0 || verticalInput != 0)
+        {
+            bool isRun;
+
+            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W))
+            {
+                isRun = true;
+            }
+            else
+            {
+                isRun = false;
+            }
+
+            Vector3 moveDirection = new Vector3(horizontalInput, 0, verticalInput);
+            rb.AddRelativeForce(moveDirection * (isRun ? moveSpeed * 2 : moveSpeed));
+        }
     }
 
     private void Rotate()
