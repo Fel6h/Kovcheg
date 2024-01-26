@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -9,85 +8,54 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private int minScroll = 3;
     [SerializeField] private int maxScroll = 3;
-    [SerializeField] private float scrollSpeed;
-    [SerializeField] private float mouseSensitivity;
-    private int numberScrollSteps = 10;
-    private List<Vector3> cameraPositions = new List<Vector3>();
-    private int indexCurrentPostion;
+    [SerializeField] private float mouseSensitivity = 10;
+    [SerializeField] private float scrollSensitivity = 1.5f;
+    [SerializeField] private float cameraSpeed;
     private Vector3 playerPositionLastFrame;
-
-    private int IndexCurrentPostion
-    {
-        get
-        {
-            if (indexCurrentPostion < 0)
-                indexCurrentPostion = 0;
-            if (indexCurrentPostion == cameraPositions.Count)
-                indexCurrentPostion = cameraPositions.Count - 1;
-
-            return indexCurrentPostion;
-        }
-    }
+    private Vector3 startCameraPosition;
+    private Vector3 target;
 
     private void Start()
     {
+        target = _camera.localPosition;
         playerPositionLastFrame = player.position;
-        FillListPositions();
+        startCameraPosition = _camera.localPosition;
     }
 
     private void FixedUpdate()
     {
-        SetPosition();
+        Scroll();
+        Move();
         Rotate();
     }
 
-    private void FillListPositions()
+    private void Scroll()
     {
-        Vector3 endCameraPosition = _camera.localPosition;
-        endCameraPosition.z += minScroll;
-        float scrollStep = minScroll / ((float)numberScrollSteps / 2);
+        float scrollValue = Input.GetAxis("Mouse ScrollWheel") * scrollSensitivity;
 
-        for (int i = 0; i < numberScrollSteps / 2; i++)
+        float nextScrollDistance = _camera.localPosition.z + scrollValue - startCameraPosition.z;
+
+        if (scrollValue > 0 && nextScrollDistance > minScroll)
         {
-            AddPositions(scrollStep, endCameraPosition, i);
+            scrollValue -= nextScrollDistance - minScroll;
+        }
+        else if (scrollValue < 0 && nextScrollDistance < maxScroll * -1)
+        {
+            scrollValue += maxScroll * -1 - nextScrollDistance;
         }
 
-        endCameraPosition = _camera.localPosition;
-        scrollStep = maxScroll / ((float)numberScrollSteps / 2);
-
-        for (int i = 0; i < numberScrollSteps / 2 + 1; i++)
+        if (scrollValue != 0)
         {
-            AddPositions(scrollStep, endCameraPosition, i);
+            target = new Vector3(_camera.localPosition.x,
+                _camera.localPosition.y,
+                _camera.localPosition.z + scrollValue);
         }
 
-        indexCurrentPostion = cameraPositions.Count / 2;
+        _camera.localPosition = Vector3.MoveTowards(_camera.localPosition, target, cameraSpeed);
     }
 
-    private void AddPositions(float scrollStep, Vector3 endCameraPosition, int index)
+    private void Move()
     {
-            Vector3 newPosition = endCameraPosition;
-            newPosition.z -= scrollStep * index;
-            cameraPositions.Add(newPosition);
-    }
-
-    private void SetPosition()
-    {
-        float scrollValue = Input.GetAxis("Mouse ScrollWheel");
-
-        if (scrollValue < 0)
-        {
-            indexCurrentPostion++;
-        }
-        else if (scrollValue > 0)
-        {
-            indexCurrentPostion--;
-        }
-
-        if (_camera.localPosition != cameraPositions[IndexCurrentPostion])
-        {
-            _camera.localPosition = Vector3.MoveTowards(_camera.localPosition, cameraPositions[IndexCurrentPostion], scrollSpeed);
-        }
-
         if (playerPositionLastFrame != player.position)
         {
             Vector3 direction = player.position - playerPositionLastFrame;

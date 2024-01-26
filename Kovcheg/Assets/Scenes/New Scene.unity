@@ -517,8 +517,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 677658228}
+  - component: {fileID: 677658229}
   m_Layer: 0
-  m_Name: "Axis Rotation \u0421amera Parent"
+  m_Name: "(Camera) Axis Rotation \u0421amera Parent"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -540,6 +541,27 @@ Transform:
   - {fileID: 1791656953}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &677658229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677658227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ff05a5230a92b4a8bf54b9ec742221, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 972831412}
+  cameraParent: {fileID: 1791656953}
+  "axisRotation\u0421ameraParent": {fileID: 677658228}
+  player: {fileID: 61573116}
+  minScroll: 2
+  maxScroll: 30
+  mouseSensitivity: 10
+  scrollSensitivity: 22
+  cameraSpeed: 0.3
 --- !u!1 &972831409
 GameObject:
   m_ObjectHideFlags: 0
@@ -747,7 +769,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1791656953}
-  - component: {fileID: 1791656954}
   m_Layer: 0
   m_Name: Camera Parent
   m_TagString: Untagged
@@ -771,26 +792,6 @@ Transform:
   - {fileID: 972831412}
   m_Father: {fileID: 677658228}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1791656954
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1791656952}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36ff05a5230a92b4a8bf54b9ec742221, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _camera: {fileID: 972831412}
-  cameraParent: {fileID: 1791656953}
-  "axisRotation\u0421ameraParent": {fileID: 677658228}
-  player: {fileID: 61573116}
-  minScroll: 2
-  maxScroll: 5
-  scrollSpeed: 0.07
-  mouseSensitivity: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
